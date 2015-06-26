@@ -47,7 +47,9 @@ namespace Zhenway.BatchRequestAggregrators
                     }
                 });
             }
-            return (IReadOnlyList<TResult>)new Segment<TResult>(await proxyItem.TaskCompletionSource.Task, startIndex, args.Count);
+            var results = await proxyItem.TaskCompletionSource.Task;
+            await Task.Yield();
+            return (IReadOnlyList<TResult>)new Segment<TResult>(results, startIndex, args.Count);
         }
 
         private bool TryAggregate(
